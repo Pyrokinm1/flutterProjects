@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/db/data_base_helper.dart';
+import 'package:flutter_application_1/screens/admin.dart';
+import 'package:flutter_application_1/screens/signIn.dart';
+import 'package:flutter_application_1/screens/user.dart';
 
-import 'core/db/data_base_helper.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   DataBaseHelper.instance.init();
-  runApp(const MyApp());
+  runApp(const App());
+ 
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return const MaterialApp(
+      home: SignIn(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
