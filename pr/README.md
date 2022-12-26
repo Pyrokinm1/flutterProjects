@@ -1,16 +1,38 @@
-# pr
+# Практическая работа №1
 
-A new Flutter project.
 
-## Getting Started
+### Тема: Верстка макетов из Figma
+### *"Meditate"* - flutter-приложение, состоящее из трех окон.
+### Для реализации данного проекта использовался язык программирования *dart*.
+###
+### Для реализации каждого окна использовались такие виджеты как:
+- SingleChildScrollView - для вертикальной и горизонтальной (на последнем макете) прокрутки
+- Container - для обозначения высоты и ширины определенных элементов, настройки фона, позиционирования элементов.
+- Column - для построения элементов внутри в колонну
+- Padding - для обозначения внутренних отступов
+###
+### Для реализации второго и третьего окон использовались также:
+- Stack - для наложения элементов друг на друга
+- SizedBox - для создания прозрачного контейнера, чтобы установить высоту и ширину этого контейнера
+- Row - для построения элементов внутри в строку
+###
+### Для кнопок использовались:
+- IconButton - для кнопок, не содержащие текст, а только иконку
+- ElevatedButton - для кнопок, которые содержат текст (если и текст, и иконку, то использовался ElevatedButton.icon)
+###
+### Для векторных изображений использовался формат svg.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Первое окно - окно авторазации. 
+![image](https://user-images.githubusercontent.com/80402777/191964061-10a01a74-aeea-4b62-94af-ecd005c082ac.png)
+### Второе окно - окно с подборкой тематических аудиозаписей. 
+![image](https://user-images.githubusercontent.com/80402777/191964124-a049bc9d-4ea8-4f6d-b160-4b32c9db47fe.png)
+### Третье окно - окно с блоками сессий. 
+![image](https://user-images.githubusercontent.com/80402777/191998067-36eb493f-8ddb-4418-8f1b-3e61da360932.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
+
+
