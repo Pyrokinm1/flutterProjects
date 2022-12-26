@@ -1,24 +1,35 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'brightness_state.dart';
 
-class BrightnessCubit extends Cubit<BrightnessState> {
-  BrightnessCubit() : super(BrightnessInitial());
+class BrightnessCubit extends Cubit<Brightness> {
+  BrightnessCubit() : super(Brightness.light);
 
-  // Brightness brightness = Brightness.light;
+  SharedPreferences? sharedPreferences;
+  Future<void> init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
 
+    var thema = sharedPreferences!.getBool('thema') ?? true;
 
-  void onClickLight(Brightness brightness){
-    if(brightness == Brightness.dark){
+    if (thema) {
+      emit((Brightness.light));
+    } else {
+      emit(Brightness.dark);
+    }
+  }
+
+  void onClickLight(Brightness brightness) {
+    if (brightness == Brightness.dark) {
       brightness = Brightness.light;
-      emit(clickBrightnessLight(brightness));
-    }
-    else{
+      sharedPreferences!.setBool('thema', true);
+      emit(brightness);
+    } else {
       brightness = Brightness.dark;
-      emit(clickBrightnessLight(brightness));
+      sharedPreferences!.setBool('thema', false);
+      emit(brightness);
     }
-    
   }
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/cubit/brightness_cubit.dart';
-import 'package:flutter_application_1/cubit/click_cubit.dart';
-import 'package:flutter_application_1/cubit/list_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newpr/Screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'cubit/brightness_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,132 +11,113 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => ClickCubit()),
-          BlocProvider(create: (context) => BrightnessCubit()),
-          BlocProvider(create: (context) => ListCubit()),
+          BlocProvider(create: (context) => BrightnessCubit()..init()),
         ],
-        child: BlocBuilder<BrightnessCubit, BrightnessState>(
-            builder: (context, state) {
-          if (state is clickBrightnessLight) {
-            return MaterialApp(
-              title: 'Flutter Demo',
-              theme: ThemeData(brightness: state.brightnessLight),
-              home: MyHomePage(),
-              debugShowCheckedModeBanner: false,
-            );
-          }
+        child:
+            BlocBuilder<BrightnessCubit, Brightness>(builder: (context, state) {
           return MaterialApp(
             title: 'Flutter Demo',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: MyHomePage(),
+            theme: ThemeData(brightness: state),
+            home: const MyHomePage(title: 'Flutter Demo Home Page'),
             debugShowCheckedModeBanner: false,
           );
         }));
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  MyHomePage({super.key});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
 
-  String res = '0';
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+
+  SharedPreferences? sharedPreferences;
+
+  Future<void> initShared() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initShared().then((value) {
+      setState(() {
+        _counter = sharedPreferences!.getInt('counter') ?? 0;
+      });
+    });
+  }
+
+  void _incrementCounter() async {
+    setState(() {
+      _counter++;
+    });
+
+    await sharedPreferences!.setInt('counter', _counter);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            BlocBuilder<ClickCubit, ClickState>(
-              builder: (context, state) {
-                if (state is cliskError) {
-                  return Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.headline4,
-                  );
-                }
-                if (state is Click) {
-                  res = state.count.toString();
-                  return Text(
-                    res,
-                    style: Theme.of(context).textTheme.headline4,
-                  );
-                }
-                return Container();
-              },
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        context
-                            .read<ClickCubit>()
-                            .onClickPlus(Theme.of(context).brightness);
-                        context
-                            .read<ListCubit>()
-                            .onClickResult(Theme.of(context).brightness, res);
-                      },
-                      icon: const Icon(Icons.add),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        context.read<ClickCubit>().onClickMinus();
-                        context
-                            .read<ListCubit>()
-                            .onClickResult(Theme.of(context).brightness, res);
-                      },
-                      icon: const Icon(Icons.remove),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    context
-                        .read<BrightnessCubit>()
-                        .onClickLight(Theme.of(context).brightness);
-                  },
-                  icon: const Icon(Icons.auto_awesome),
-                ),
-              ],
-            ),
-            BlocBuilder<ListCubit, ListState>(
-              builder: (context, state) {
-                if (state is clickRes) {
-                  return SizedBox(
-                    height: 800,
-                    width: 400,
-                    child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: state.result,
-                        )),
-                  );
-                } else if (state is clickClear) {
-                  return state.result;
-                }
-                return Container();
-              },
-            ),
-          ],
+    if (false) {
+      return Screen(count: _counter);
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<ListCubit>().onClickClear(),
-        tooltip: 'clear list',
-        backgroundColor: Colors.blueGrey,
-        child: const Icon(Icons.clear),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'Нажми на кнопку',
+              ),
+              Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      context
+                          .read<BrightnessCubit>()
+                          .onClickLight(Theme.of(context).brightness);
+                    },
+                    icon: const Icon(Icons.auto_awesome),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Screen(count: _counter),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.send)),
+                ],
+              )
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _incrementCounter,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        ),
+      );
+    }
   }
 }

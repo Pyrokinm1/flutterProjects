@@ -5,13 +5,13 @@ abstract class BrightnessState {}
 
 class BrightnessInitial extends BrightnessState {}
 
-class clickBrightnessLight extends BrightnessState{
+class clickBrightnessLight extends BrightnessState {
   // var result;
   Brightness brightnessLight;
   clickBrightnessLight(this.brightnessLight);
 }
 
-class clickBrightnessDark extends BrightnessState{
+class clickBrightnessDark extends BrightnessState {
   // var result;
   Brightness brightnessDark;
   clickBrightnessDark(this.brightnessDark);
