@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/meditate_one.dart';
-import 'package:flutter_application_1/meditate_two.dart';
-import 'package:flutter_application_1/meditate.dart';
+
+import 'core/db/data_base_helper.dart';
 
 void main() {
-  runApp(const App());
+  WidgetsFlutterBinding.ensureInitialized();
+  DataBaseHelper.instance.init();
+  runApp(const MyApp());
 }
 
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Meditate(),
-    );
+    return MaterialApp();
   }
 }
